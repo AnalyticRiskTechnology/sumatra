@@ -105,8 +105,8 @@ class Executable(object):
         return executable
 
     def _get_version(self):
-        returncode, output, err = run("%s --version" % self.path,
-                                      shell=True, timeout=5)
+        returncode, output, err = run([self.path, "--version"],
+                                      timeout=5)
         return version_in_command_line_output(command_line_output=output + err)
 
     def __eq__(self, other):
