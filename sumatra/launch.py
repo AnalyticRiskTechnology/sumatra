@@ -14,6 +14,7 @@ from builtins import object
 import platform
 import socket
 import subprocess
+import shlex
 import os
 from sumatra.programs import Executable, MatlabExecutable
 from sumatra.dependency_finder.matlab import save_dependencies
@@ -101,14 +102,19 @@ class LaunchMode(object):
         """
         self.check_files(executable, main_file)
         cmd = self.generate_command(executable, main_file, arguments)
+        cmdArr = arguments
+        cmdArr.insert(0, main_file)
+        cmdArr.insert(0, executable.path)
         if append_label:
             cmd += " " + append_label
+            cmdArr.append(append_label)
         if 'matlab' in executable.name.lower():
             ''' we will be executing Matlab and at the same time saving the
             dependencies in order to avoid opening of Matlab shell two times '''
             result, output = save_dependencies(cmd, main_file)
         else:
-            result, output = tee.system2(cmd, cwd=self.working_directory, stdout=True)  # cwd only relevant for local launch, not for MPI, for example
+            #result, output = tee.system2(cmd, cwd=self.working_directory, stdout=True)  # cwd only relevant for local launch, not for MPI, for example
+            result, output = tee.system2(cmdArr, cwd=self.working_directory, stdout=True)
         self.stdout_stderr = "".join(output)
         if result == 0:
             return True

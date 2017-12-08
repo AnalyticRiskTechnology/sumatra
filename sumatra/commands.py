@@ -64,6 +64,8 @@ def parse_executable_str(exec_str):
         first_space = len(exec_str)
     return exec_str[:first_space], exec_str[first_space:]
 
+# TODO: No! No! No!
+# making a single string out of the args buggers up quoting
 def parse_arguments(args, input_datastore, stdin=None, stdout=None,
                     allow_command_line_parameters=True):
     cmdline_parameters = []
@@ -115,7 +117,7 @@ def parse_arguments(args, input_datastore, stdin=None, stdout=None,
         else:
             raise Exception("Command-line parameters supplied but without a parameter file to put them into.")
             # ought really to have a more specific Exception and to catch it so as to give a helpful error message to user
-    return parameter_sets, input_data, " ".join(script_args)
+    return parameter_sets, input_data, script_args
 
 
 def init(argv):
